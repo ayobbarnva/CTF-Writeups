@@ -54,3 +54,15 @@ We entered the credentials we had found:
 We successfully logged in to the WordPress interface using these credentials.
 
 ![Successful WordPress Login](screenshots/login_wp.png)
+
+### WordPress Theme Editor Discovery
+
+After exploring the WordPress dashboard, we found a file in the theme editor that appeared to be displayed when an error occurred. We also discovered that the file could be edited through the WordPress administration panel.
+
+The theme editor was accessible at:
+
+`http://192.168.43.166/wordpress/wp-admin/theme-editor.php`
+
+This discovery led us to consider whether the ability to edit theme files could be abused to execute code on the target system. We decided to investigate this possibility in our authorized CTF lab.
+
+![WordPress Theme Editor](screenshots/editor_themes.png)
