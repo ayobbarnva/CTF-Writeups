@@ -1,3 +1,20 @@
+<div align="center">
+
+# LazySysAdmin: 1
+
+### Boot-to-Root CTF Write-up
+
+**Linux Enumeration and Privilege Escalation**
+
+[English](README.md) | [فارسی](README.fa.md)
+
+![Platform](https://img.shields.io/badge/Platform-VulnHub-blue)
+![Difficulty](https://img.shields.io/badge/Difficulty-Beginner--Intermediate-orange)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+
+</div>
+
+---
 # LazySysAdmin: 1 — CTF Write-up
 
 ## Overview
