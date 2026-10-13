@@ -5,6 +5,16 @@
 LazySysAdmin: 1 is a beginner-friendly boot-to-root CTF challenge hosted on VulnHub.
 
 The challenge simulates a Linux server with security weaknesses caused by poor system administration. The objective is to enumerate services, discover exposed information, identify vulnerabilities, obtain an initial shell, and ultimately gain root access to the target machine.
+## Download the Lab
+
+You can download the LazySysAdmin: 1 virtual machine from VulnHub.
+
+- **Challenge Page:** [LazySysAdmin: 1 — VulnHub](https://www.vulnhub.com/entry/lazysysadmin-1,205/)
+- **Direct Download:** [Lazysysadmin.zip](https://download.vulnhub.com/lazysysadmin/Lazysysadmin.zip)
+
+**Virtualization:** VirtualBox or VMware
+
+**Difficulty:** Beginner – Intermediate
 
 ## Network Discovery
 
