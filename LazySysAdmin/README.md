@@ -37,3 +37,20 @@ Using the shell we obtained, we accessed the WordPress configuration files and r
 - **Password:** `TogieMYSQL12345^^`
 
 ![WordPress Configuration File](screenshots/4.png)
+
+### WordPress Login
+
+After discovering the username and password in the `wp-config.php` file, we needed to determine where these credentials could be used.
+
+Using **Dirb**, we discovered the following WordPress administration URL:
+
+`http://192.168.43.166/wordpress/wp-admin/user/`
+
+We entered the credentials we had found:
+
+- **Username:** `Admin`
+- **Password:** `TogieMYSQL12345^^`
+
+We successfully logged in to the WordPress interface using these credentials.
+
+![Successful WordPress Login](screenshots/login_wp.png)
