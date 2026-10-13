@@ -28,3 +28,12 @@ SMB is a network protocol used for sharing files and resources between devices. 
 We successfully connected to the SMB service without providing a password. This indicates that the service allows access without authentication. We can now explore the available shared resources.
 
 ![SMB Anonymous Access](screenshots/3.png)
+
+### WordPress Configuration File Discovery
+
+Using the shell we obtained, we accessed the WordPress configuration files and retrieved `wp-config.php` using the `GET` command. By examining the file contents, we discovered the following credentials:
+
+- **Username:** `Admin`
+- **Password:** `TogieMYSQL12345^^`
+
+![WordPress Configuration File](screenshots/4.png)
