@@ -148,3 +148,22 @@ cat /etc/passwd
 While examining the output, we noticed an account named `togie`. This account stood out from the other entries and became a candidate for further investigation.
 
 At this stage, we had identified a potential target for privilege escalation, but we still needed to examine the account's permissions and available access paths before determining whether it could help us gain higher privileges.
+### Discovering Credentials Through SMB
+
+After identifying the `togie` user, we decided to return to the SMB service and investigate whether any shared files contained useful information.
+
+While exploring the available SMB resources, we discovered a file named `deets.txt`. We downloaded it using the following command:
+
+```text
+smb: \> get deets.txt
+```
+
+The transfer completed successfully, and the file was saved locally for further inspection.
+
+![Password Discovered in deets.txt](screenshots/password.png)
+
+Upon examining the file, we discovered a password:
+
+- **Password:** `12345`
+
+This discovery provided a new lead for investigating the `togie` account and potential privilege escalation paths.
