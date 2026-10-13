@@ -122,3 +122,29 @@ Metasploit confirmed that the reverse TCP handler had started and was listening 
 ![Metasploit Listener](screenshots/msfconsol.png)
 
 At this point, the handler was waiting for an incoming connection. A successful session would confirm that the payload had executed and connected back to our machine.
+
+### Obtaining a Shell
+
+After starting the Metasploit listener, we sent a request to the modified WordPress theme file at the following URL:
+
+`http://192.168.43.166/wordpress/wp-content/themes/twentyfifteen/404.php`
+
+This triggered the PHP payload and successfully established a Meterpreter session, giving us an initial foothold on the target machine.
+
+![Obtaining a Shell](screenshots/get_Shell.png)
+
+### Enumerating System Users
+
+Our initial shell provided limited privileges, so the next step was to investigate the system and identify potential paths for privilege escalation.
+
+We used the following command to list the local user accounts:
+
+```bash
+cat /etc/passwd
+```
+
+![System User Enumeration](screenshots/passwd.png)
+
+While examining the output, we noticed an account named `togie`. This account stood out from the other entries and became a candidate for further investigation.
+
+At this stage, we had identified a potential target for privilege escalation, but we still needed to examine the account's permissions and available access paths before determining whether it could help us gain higher privileges.
