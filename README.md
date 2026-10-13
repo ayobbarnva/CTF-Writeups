@@ -1,2 +1,2 @@
-# Daily-CTF-Writeups
+# CTF-Writeups
 Daily CTF write-ups documenting practical cybersecurity learning.
