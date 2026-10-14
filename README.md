@@ -1,2 +1,2 @@
 # CTF-Writeups
-Daily CTF write-ups documenting practical cybersecurity learning.
+CTF write-ups documenting practical cybersecurity learning.
