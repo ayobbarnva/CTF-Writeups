@@ -146,7 +146,7 @@ After generating the PHP Meterpreter payload, we opened the WordPress Theme Edit
 
 We then saved the changes. This step was intended to test whether the modified theme file could execute the PHP payload in our authorized CTF environment.
 
-![Payload Inserted into WordPress Theme Editor](screenshots/edied.png)
+![Payload Inserted into WordPress Theme Editor](screenshots/edited.png)
 
 ## Starting the Metasploit Listener
 
