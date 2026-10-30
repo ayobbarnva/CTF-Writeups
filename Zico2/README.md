@@ -33,3 +33,19 @@ A simple online store page appeared, confirming that a web application was runni
 
 ![Initial Store Website](screenshots/two.png)
 
+
+## 3. Directory Enumeration
+
+Next, I used **DIRB** to discover directories and files exposed by the web server:
+
+```bash
+dirb http://192.168.43.200
+```
+
+The scan identified several paths, including `/css/`, `/dbadmin/`, `/img/`, `/js/`, and `/vendor/`. It also found `/index`, `/index.html`, `/LICENSE`, `/package`, `/server-status`, `/tools`, and `/view`.
+
+One result that stood out was **`/dbadmin/`**. DIRB reported that this directory was listable, meaning its contents could be browsed through the web server. This made it a useful path to investigate further.
+
+Other notable responses included HTTP 403 for `/cgi-bin/` and `/server-status`, while `/index`, `/index.html`, `/LICENSE`, `/package`, and `/tools` returned HTTP 200.
+
+![DIRB directory enumeration output](screenshots/3.png)
