@@ -14,3 +14,11 @@ The command-line output is shown below.
 
 This information provides the target IP for the next enumeration steps.
 
+## 2. Web Enumeration
+
+After identifying the target machine, I entered its IP address (`192.168.43.200`) in the web browser.
+
+A simple online store page appeared, confirming that a web application was running on the target machine.
+
+![Initial Store Website](screenshots/two.png)
+
