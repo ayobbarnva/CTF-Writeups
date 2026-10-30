@@ -49,3 +49,7 @@ One result that stood out was **`/dbadmin/`**. DIRB reported that this directory
 Other notable responses included HTTP 403 for `/cgi-bin/` and `/server-status`, while `/index`, `/index.html`, `/LICENSE`, `/package`, and `/tools` returned HTTP 200.
 
 ![DIRB directory enumeration output](screenshots/3.png)
+
+## AI Usage Disclosure
+
+This README was written with assistance from AI. All commands, testing, and technical work documented here were performed by the author.
