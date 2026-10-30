@@ -361,3 +361,7 @@ The LazySysAdmin CTF demonstrated how multiple security weaknesses can be combin
 During the challenge, we enumerated network services, discovered anonymously accessible SMB resources, recovered credentials, accessed the WordPress administration panel, and used an editable theme file to obtain an initial shell.
 
 We then investigated local user accounts, discovered credentials for `togie`, and found that the account could execute commands with unrestricted sudo privileges. This ultimately allowed us to obtain root access and read `/root/proof.txt`, completing the challenge.
+
+## AI Usage Disclosure
+
+This README was written with assistance from AI. All commands, testing, and technical work documented here were performed by the author.
