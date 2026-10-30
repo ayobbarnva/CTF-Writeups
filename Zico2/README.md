@@ -1,4 +1,15 @@
+<div align="center">
+
 # Zico2
+
+### CTF Write-up
+
+[English](README.md) | [فارسی](README.fa.md)
+
+</div>
+
+---
+
 
 ## 1. Network Discovery
 
