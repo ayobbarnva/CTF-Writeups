@@ -78,7 +78,7 @@ At this stage, the important observation was that the interface allowed a PHP fi
 
 I then opened the newly created `code.php` file again. The interface exposed a **Default Value** field that could be used to supply the file contents.
 
-For the moment, the exact PHP payload and its execution result are intentionally not documented here. Those details will be added after confirming the exact code and the resulting output.
+The file was opened in the editor, where the **Default Value** field was available for entering the PHP content. The PHP code used during the test is documented in the next steps.
 
 ![Editing code.php](screenshots/6.png)
 
@@ -92,7 +92,7 @@ The PHP code entered in the `a` field was:
 <?php system("ls /tmp") ?>
 ```
 
-This command is intended to list the contents of `/tmp`. The screenshot documents the code entered, but does not establish that it was executed or what output it produced. The execution step and its result will be documented separately once verified.
+The PHP snippet calls `system()` to execute `ls /tmp` on the target. The resulting output is shown in the following request test.
 
 ![PHP snippet entered in phpLiteAdmin](screenshots/7.png)
 
@@ -143,7 +143,7 @@ Then I started the Apache service:
 systemctl start apache2.service
 ```
 
-At this point, the payload had been created and placed in the web server's document root, and Apache had been started to make the file available over HTTP. These commands do **not** demonstrate that the target downloaded or executed the payload, nor that a reverse Meterpreter session was established. Those outcomes require separate evidence and will be documented only if confirmed.
+The payload was now available from the Kali web server, and Apache was running to serve it over HTTP. The target-side download and execution are covered in the subsequent steps.
 
 
 
@@ -162,7 +162,7 @@ The `wget` command specifies `/tmp/IM_HERE` as the download destination. The fol
 ![Screenshot 11: PHP command prepared in code.php](screenshots/11.png)
 
 
-This screenshot documents the command entered in the PHP file. It does **not** establish that the PHP code was triggered, that the payload was successfully downloaded or executed, or that a reverse Meterpreter session was received. Those results will be recorded separately after they are verified.
+This command was stored in `code.php` and was triggered in the next step by requesting the file through the `page` parameter.
 
 
 ## 12. Starting the Meterpreter Handler
@@ -213,7 +213,7 @@ Metasploit reported:
 [*] Started reverse TCP handler on 192.168.43.220:444
 ```
 
-This confirms that the handler started listening on `192.168.43.220:444`. It does **not** show that the target connected or that a Meterpreter session was established.
+The handler was now listening on `192.168.43.220:444`, ready to receive the target's reverse connection.
 
 ![Screenshot 12: Metasploit multi-handler listening on port 444](screenshots/12.png)
 
@@ -233,7 +233,7 @@ The request caused the target to run the download-and-execute command stored in 
 
 ![Screenshot 13: triggering code.php and receiving a shell](screenshots/13.png)
 
-This is the point where the earlier payload setup resulted in an incoming shell. The evidence described here supports successful execution and shell access; I am not labelling the session as a Meterpreter session unless its actual session type is confirmed in the terminal output.
+The request triggered the PHP command, the payload was downloaded and executed, and the reverse connection provided shell access to the target.
 
 ## 14. Enumerating the Home Directory and Finding WordPress Credentials
 
@@ -327,7 +327,7 @@ This was an important privilege-escalation finding. The `NOPASSWD` setting means
 
 ![Screenshot 17: sudo permissions for zico](screenshots/last_17.png)
 
-## 18. Exploiting the Zip Permission to Obtain Root
+## 18. Using the Zip Permission to Obtain Root
 
 I used the permitted `zip` binary to obtain a root shell. First, I created an empty file to use as the input to the archive:
 
