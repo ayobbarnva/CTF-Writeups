@@ -48,15 +48,25 @@ Other notable responses included HTTP 403 for `/cgi-bin/` and `/server-status`, 
 
 ![DIRB directory enumeration output](screenshots/3.png)
 
-## 4. Database Administration Panel
+## 4. Accessing phpLiteAdmin
 
-After discovering the `/dbadmin/` directory, I opened it in the browser and inspected the available database administration interface.
+After discovering `/dbadmin/`, I accessed the following path:
+
+`http://192.168.43.200/dbadmin/`
+
+The page presented a phpLiteAdmin login prompt. It did not request a username and only required a password. The password shown in the challenge was accepted, providing access to the administration interface.
+
+![phpLiteAdmin login](screenshots/last%204.png)
+
+## 5. Database Administration Panel
+
+After gaining access, I inspected the available phpLiteAdmin functionality.
 
 The interface provided functionality for creating and managing databases and files. This became the next area of investigation because it exposed functionality beyond the public-facing store application.
 
 ![DBAdmin interface](screenshots/4.png)
 
-## 5. Creating a PHP File
+## 6. Creating a PHP File
 
 Using the functionality available in the database administration interface, I created a new file named `code.php` within a newly created database context.
 
@@ -64,7 +74,7 @@ At this stage, the important observation was that the interface allowed a PHP fi
 
 ![PHP file creation](screenshots/5.png)
 
-## 6. Editing the PHP File
+## 7. Editing the PHP File
 
 I then opened the newly created `code.php` file again. The interface exposed a **Default Value** field that could be used to supply the file contents.
 
