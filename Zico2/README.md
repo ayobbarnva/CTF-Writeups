@@ -393,4 +393,3 @@ This confirmed completion of the machine: I had escalated from the `zico` accoun
 ![Screenshot 19: reading flag.txt as root](screenshots/17.png)
 
 
-*AI assistance was used in preparing this README.*
