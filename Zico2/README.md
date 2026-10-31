@@ -121,6 +121,8 @@ This confirms that, in this tested case, the `page` parameter can be manipulated
 
 ## 10. Generating and Hosting a Meterpreter Payload
 
+![Screenshot 10: Meterpreter payload generation and Apache startup](screenshots/10.png)
+
 After the previous test, I generated a Linux x86 Meterpreter reverse TCP payload with `msfvenom`. The payload was configured to connect back to the Kali machine at `192.168.43.220` on port `444`, and was saved as an ELF file named `IM_HERE` in Apache's document root:
 
 ```bash
