@@ -10,7 +10,6 @@
 
 ---
 
-
 ## 1. Network Discovery
 
 The first step was to identify the target machine on the local network.
@@ -33,7 +32,6 @@ A simple online store page appeared, confirming that a web application was runni
 
 ![Initial Store Website](screenshots/two.png)
 
-
 ## 3. Directory Enumeration
 
 Next, I used **DIRB** to discover directories and files exposed by the web server:
@@ -50,3 +48,30 @@ Other notable responses included HTTP 403 for `/cgi-bin/` and `/server-status`, 
 
 ![DIRB directory enumeration output](screenshots/3.png)
 
+## 4. Database Administration Panel
+
+After discovering the `/dbadmin/` directory, I opened it in the browser and inspected the available database administration interface.
+
+The interface provided functionality for creating and managing databases and files. This became the next area of investigation because it exposed functionality beyond the public-facing store application.
+
+![DBAdmin interface](screenshots/4.png)
+
+## 5. Creating a PHP File
+
+Using the functionality available in the database administration interface, I created a new file named `code.php` within a newly created database context.
+
+At this stage, the important observation was that the interface allowed a PHP file to be created and subsequently accessed through the same interface.
+
+![PHP file creation](screenshots/5.png)
+
+## 6. Editing the PHP File
+
+I then opened the newly created `code.php` file again. The interface exposed a **Default Value** field that could be used to supply the file contents.
+
+For the moment, the exact PHP payload and its execution result are intentionally not documented here. Those details will be added after confirming the exact code and the resulting output.
+
+![Editing code.php](screenshots/6.png)
+
+---
+
+*This README was written with assistance from AI; the code was written entirely by me.*
