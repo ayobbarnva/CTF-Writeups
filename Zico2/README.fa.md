@@ -395,4 +395,3 @@ cat flag.txt
 ![تصویر ۱۹: خواندن flag.txt با دسترسی root](screenshots/17.png)
 
 
-*برای نگارش این README از کمک هوش مصنوعی استفاده شده است.*
