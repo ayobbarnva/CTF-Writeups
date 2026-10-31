@@ -96,6 +96,29 @@ This command is intended to list the contents of `/tmp`. The screenshot document
 
 ![PHP snippet entered in phpLiteAdmin](screenshots/7.png)
 
+
+## 9. Testing the `page` Parameter
+
+I inspected the page-loading behaviour of `view.php`. The normal request used the `page` parameter to load `tools.html`:
+
+`http://192.168.43.200/view.php?page=tools.html`
+
+The first screenshot records the page before changing the parameter.
+
+![view.php loading tools.html](screenshots/8.png)
+
+I then changed the parameter to reference the PHP file created earlier, using a relative path that traverses to `/usr/databases/ls.php`:
+
+```text
+http://192.168.43.200/view.php?page=../../usr/databases/ls.php
+```
+
+The next screenshot shows the response after this request. The output is consistent with the PHP code in `ls.php` being executed and the `ls /tmp` command being run.
+
+![Result of requesting ls.php through the page parameter](screenshots/9.png)
+
+This confirms that, in this tested case, the `page` parameter can be manipulated to load a PHP file outside the expected page path, and that the referenced PHP file produced command output. It does **not** establish that every possible file can be loaded or executed; that would require additional testing.
+
 ---
 
 *AI assistance was used in preparing this README.*
