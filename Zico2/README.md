@@ -86,7 +86,13 @@ For the moment, the exact PHP payload and its execution result are intentionally
 
 I selected the database file `/usr/databases/ls.php` in phpLiteAdmin and opened the row insertion form for its table, `a`. In the field named `a`, which is displayed with the `integer` type, I entered a PHP snippet intended to list the contents of `/tmp`.
 
-The screenshot documents the snippet entered in the field. It does not establish that the row was inserted, that the PHP code was executed, or what output the command produced. The execution step and its result will be documented separately once verified.
+The PHP code entered in the `a` field was:
+
+```php
+<?php system("ls /tmp") ?>
+```
+
+This command is intended to list the contents of `/tmp`. The screenshot documents the code entered, but does not establish that it was executed or what output it produced. The execution step and its result will be documented separately once verified.
 
 ![PHP snippet entered in phpLiteAdmin](screenshots/7.png)
 
