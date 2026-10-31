@@ -54,9 +54,9 @@ After discovering `/dbadmin/`, I accessed the following path:
 
 `http://192.168.43.200/dbadmin/`
 
-The page presented a phpLiteAdmin login prompt. It did not request a username and only required a password. The password shown in the challenge was accepted, providing access to the administration interface.
+The page presented a phpLiteAdmin login prompt. It did not request a username and only required a password. The password `admin` was accepted, providing access to the administration interface.
 
-![phpLiteAdmin login](screenshots/last%204.png)
+![phpLiteAdmin login](screenshots/last_4.png)
 
 ## 5. Database Administration Panel
 
