@@ -82,6 +82,14 @@ For the moment, the exact PHP payload and its execution result are intentionally
 
 ![Editing code.php](screenshots/6.png)
 
+## 8. Preparing a Command in the Database
+
+I selected the database file `/usr/databases/ls.php` in phpLiteAdmin and opened the row insertion form for its table, `a`. In the field named `a`, which is displayed with the `integer` type, I entered a PHP snippet intended to list the contents of `/tmp`.
+
+The screenshot documents the snippet entered in the field. It does not establish that the row was inserted, that the PHP code was executed, or what output the command produced. The execution step and its result will be documented separately once verified.
+
+![PHP snippet entered in phpLiteAdmin](screenshots/7.png)
+
 ---
 
 *AI assistance was used in preparing this README.*
