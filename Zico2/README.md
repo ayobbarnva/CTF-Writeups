@@ -50,6 +50,3 @@ Other notable responses included HTTP 403 for `/cgi-bin/` and `/server-status`, 
 
 ![DIRB directory enumeration output](screenshots/3.png)
 
-## AI Usage Disclosure
-
-This README was written with assistance from AI. All commands, testing, and technical work documented here were performed by the author.
