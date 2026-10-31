@@ -117,7 +117,7 @@ The next screenshot shows the response after this request. The output is consist
 
 ![Result of requesting ls.php through the page parameter](screenshots/9.png)
 
-This confirms that, in this tested case, the `page` parameter can be manipulated to load a PHP file outside the expected page path, and that the referenced PHP file produced command output. It does **not** establish that every possible file can be loaded or executed; that would require additional testing.
+This confirms that the `page` parameter can be manipulated to load the PHP file outside the expected page path and execute the command stored in it.
 
 ## 10. Generating and Hosting a Meterpreter Payload
 
