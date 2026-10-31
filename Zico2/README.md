@@ -10,6 +10,17 @@
 
 ---
 
+## Download the Lab Machine
+
+Download the **Zico2** virtual machine (OVA) from the link below:
+
+[Download Zico2.ova from Dropbox](https://www.dropbox.com/s/dhidaehguuhyv9a/zico2.ova)
+
+After downloading, import the OVA file into VirtualBox or another compatible virtualization platform.
+
+---
+
+
 ## 1. Network Discovery
 
 The first step was to identify the target machine on the local network.
