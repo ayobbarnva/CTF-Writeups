@@ -84,4 +84,4 @@ For the moment, the exact PHP payload and its execution result are intentionally
 
 ---
 
-*This README was written with assistance from AI; the code was written entirely by me.*
+*AI assistance was used in preparing this README.*
