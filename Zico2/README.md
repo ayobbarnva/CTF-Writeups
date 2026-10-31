@@ -219,4 +219,92 @@ This confirms that the handler started listening on `192.168.43.220:444`. It doe
 
 ---
 
+## 13. Triggering the PHP File and Receiving a Shell
+
+With the reverse TCP handler ready on the Kali machine, I sent a request to \`view.php\` that referenced the PHP file created earlier:
+
+\`\`\`text
+http://192.168.43.200/view.php?page=../../usr/databases/code.php
+\`\`\`
+
+The request caused the target to run the download-and-execute command stored in \`code.php\`. The payload was downloaded from the Kali web server and executed. A shell connection was received successfully.
+
+![Screenshot: reverse handler ready](screenshots/last_13.png)
+
+![Screenshot 13: triggering code.php and receiving a shell](screenshots/13.png)
+
+This is the point where the earlier payload setup resulted in an incoming shell. The evidence described here supports successful execution and shell access; I am not labelling the session as a Meterpreter session unless its actual session type is confirmed in the terminal output.
+
+## 14. Enumerating the Home Directory and Finding WordPress Credentials
+
+After obtaining the shell, I moved to \`/home/zico\` and listed its contents:
+
+\`\`\`bash
+cd /home/zico
+ls
+\`\`\`
+
+The directory contained WordPress-related files. I inspected the WordPress configuration file with \`cat\`:
+
+\`\`\`bash
+cat wp-config.php
+\`\`\`
+
+The configuration exposed a password associated with the local \`zico\` account:
+
+- **Username:** \`zico\`
+- **Password:** \`sWfCsfJSPV9H3AmQzw8\`
+
+Ah, WordPress... The configuration file provided the credential needed for the next access attempt. This password is recorded here as a credential found on this specific lab machine; it should not be reused elsewhere.
+
+![Screenshot 14: WordPress files and configuration](screenshots/14.png)
+
+## 15. Enumerating Network Services
+
+Before trying the recovered credential, I checked which services were exposed by the target:
+
+\`\`\`bash
+nmap -sV 192.168.43.200
+\`\`\`
+
+The scan identified three open TCP ports:
+
+| Port | State | Service | Version |
+|---|---|---|---|
+| 22/tcp | open | SSH | OpenSSH 5.9p1 Debian 5ubuntu1.10 |
+| 80/tcp | open | HTTP | Apache httpd 2.2.22 ((Ubuntu)) |
+| 111/tcp | open | rpcbind | 2-4 |
+
+The SSH service on port \`22\` was the relevant next step because I now had a username and password to test. The scan also identified the web server on port \`80\` and \`rpcbind\` on port \`111\`.
+
+![Screenshot 15: Nmap service-version scan](screenshots/15.png)
+
+## 16. Logging in Through SSH
+
+Since Nmap confirmed that SSH was available, I tried the recovered credentials:
+
+\`\`\`bash
+ssh zico@192.168.43.200
+\`\`\`
+
+On the first connection, SSH displayed the host authenticity prompt. I accepted the host key by entering \`yes\`, after which the server prompted for the account password. I entered the password recovered from the WordPress configuration file.
+
+After login, I ran:
+
+\`\`\`bash
+whoami
+\`\`\`
+
+The command returned:
+
+\`\`\`text
+zico
+\`\`\`
+
+This confirmed successful SSH authentication as the local user \`zico\`.
+
+![Screenshot 16: successful SSH login as zico](screenshots/16.png)
+
+---
+
 *AI assistance was used in preparing this README.*
