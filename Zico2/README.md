@@ -164,4 +164,6 @@ The `wget` command specifies `/tmp/IM_HERE` as the download destination. The fol
 
 ![Screenshot 11: PHP command prepared in code.php](screenshots/11.png)
 
+![Screenshot 12: Additional evidence from the PHP preparation step](screenshots/12.png)
+
 This screenshot documents the command entered in the PHP file. It does **not** establish that the PHP code was triggered, that the payload was successfully downloaded or executed, or that a reverse Meterpreter session was received. Those results will be recorded separately after they are verified.
